@@ -2,6 +2,19 @@
   img {
     border: 5px;
   }
+  
+  
+  .cta-text:hover {
+   
+    transform: scale(1.1);
+    transition: 0.5s;
+    
+   
+
+
+  }
+
+ 
 </style>
 
 
@@ -61,7 +74,7 @@
 
 <div class=" row">
 
-        <div class="container mt-3 "  > 
+        <div class="container mt-3 "   OnClick="redirect()" > 
           <div class="cta-text p-2 p-lg-4" style="background: linear-gradient(to left, #00b894, #198754) !important;">
               <div class="row p-lg-2">
               <div class="col-12">
@@ -71,12 +84,12 @@
                </div>
           </div>
        
-
-        <div class="container mt-3 " > 
+ 
+        <div class="container mt-3 "  > 
           <div class="cta-text p-2 p-lg-4" style="background: linear-gradient(to left, #00b894, #198754) !important;">
               <div class="row p-lg-2">
               <div class="col-12">
-                  <h6 class="text-white m-3  text-center"> تماس فوری با ما  </h6></div>
+                  <h6 class="text-white m-3  text-center" > تماس فوری با ما  </h6></div>
                  
             </div>
                </div>
@@ -108,3 +121,12 @@
 </div>
 <!-- Internet Connection Status-->
 <div class="internet-connection-status" id="internetStatus"></div>
+
+<script>
+
+   function redirect() {
+    window.location.href = "/home/cat";
+  }
+
+
+  </script>

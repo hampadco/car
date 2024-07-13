@@ -11,11 +11,14 @@ public class HomeController : Controller
 
    private readonly IUser dbuser;
     private readonly IWalet dbWalet;
-    public HomeController(IUser _dbuser,IWalet _dbWalet)
+
+    private readonly Context db;
+    public HomeController(IUser _dbuser,IWalet _dbWalet,Context _db)
     {
        
         dbuser = _dbuser;
         dbWalet = _dbWalet;
+        db = _db;
     }
     
  //test diff
@@ -161,6 +164,23 @@ public IActionResult send()
     // TODO: Your code here
     return View();
 }
+
+
+public IActionResult cat()
+{
+   //viewbag list category parentid =0 use  db
+    ViewBag.ListCategory=db.Categories.Where(a=>a.ParentId==0).ToList();
+    return View();
+}
+
+public IActionResult Car(int ParentId)
+{
+   //viewbag list category parentid =0 use  db
+    ViewBag.ListCategory=db.Categories.Where(a=>a.ParentId==ParentId).ToList();
+    return View();
+}
+
+
 
 
 

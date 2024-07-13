@@ -42,14 +42,18 @@
 
                            @* add car to categoris *@
 
-                            <form action="/admin/home/addcar" method="post" class="col-12">
+                            <form action="/admin/services/addserviceme" method="post" class="col-12">
                                    <div class="row justify-content-center  p-3" >
 
                                             <div class="col-xxl-6 col-lg-6 col-xl-6 col-md-6 col-12">
-                                                <input name="CatName" class="form-control" type="text" placeholder=" نام خودرو رو وارد کنید  "  required>
+                                                <input name="Servicename" class="form-control" type="text" placeholder=" نام سرویس  رو وارد کنید  "  required>
                                             
 
                                             </div>
+
+                                      <input name="id" class="form-control " style="display:none" type="text" value="@ViewBag.id">
+
+
 
                                             <div class="col-xxl-2 col-lg-2 col-xl-2 col-md-2 col-12 mt-1 ">
                                                 <button type="submit" class="btn btn-primary form-control"> اضافه کردن </button>
@@ -67,22 +71,26 @@
                                     <thead>
                                         <tr>
                                             <th>ردیف</th>
-                                            <th>نام خودرو</th>
-                                            <th>لیست خدمات</th>
-                                            <th>ویرایش</th>
+                                            <th>نام سرویس</th>
+                                          
+                                        
                                             <th>حذف</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var item in ViewBag.listcars)
+
+                                    @{
+                                        int i=1;
+                                        @foreach (var item in ViewBag.listservice)
                                         {   
                                             <tr>
-                                                <td>@item.Id</td>
-                                                <td>@item.CatName</td>
-                                                <td><a href="/admin/home/mainservice/id=@item.Id " class="btn btn-primary">لیست خدمات</a></td>
-                                                <td><a href="/" class="btn btn-primary">ویرایش</a></td>
-                                                <td><a href="/admin/home/catdelete?id=@item.Id" class="btn btn-danger" onclick="return confirm('ایا از حذف مطمئن هستید ')">حذف</a></td>
+                                                <td>@i</td>
+                                                <td>@item.Srvicename</td>
+                                               
+                                                <td><a href="/admin/services/servicedelete?id=@item.Id" class="btn btn-danger" onclick="return confirm('ایا از حذف مطمئن هستید ')">حذف</a></td>
                                             </tr>
+                                            i++;
+                                        }
                                         }
 
                                     </tbody>

@@ -316,75 +316,12 @@ public class HomeController : Controller
       return View();
     }
 
-    public IActionResult Service(int id)
+    public IActionResult Service()
     {
+
+         return View();
  
 
-              ViewBag.catname=_context.Categories.Find(id).CatName;
-
-      // find row with carId == id
-      var find=_context.Prices.Where(x=>x.carId==id).FirstOrDefault();
-      Price price = new Price();
-      price.carId=id;
-      if(find != null)
-      {
-      price.motorKamel = find.motorKamel;
-      price.blokSilandr = find.blokSilandr;
-      price.silandr = find.silandr;
-      price.sarSilandr = find.sarSilandr;
-      price.boshSilandr = find.boshSilandr;
-      price.waterPump = find.waterPump;
-      price.pichKarter = find.pichKarter;
-      price.karter = find.karter;
-      price.millang = find.millang;
-      price.ringPiston = find.ringPiston;
-      price.piston = find.piston;
-      price.fanarSopap = find.fanarSopap;
-      price.shaton = find.shaton;
-      price.flayol = find.flayol;
-      price.milSopap = find.milSopap;
-      price.sopap = find.sopap;
-      price.sopapPVC = find.sopapPVC;
-      price.motorStart = find.motorStart;
-      price.superCharger = find.superCharger;
-      price.turboCharger = find.turboCharger;
-      price.pumproghan = find.pumproghan;
-      price.manifold = find.manifold;
-      price.headers = find.headers;
-      price.hydrolic = find.hydrolic;
-      price.compersorColer = find.compersorColer;
-      price.jabeFarman = find.jabeFarman;
-      price.radiator = find.radiator;
-      price.carbirator = find.carbirator;
-      price.ring = find.ring;
-      price.sagDast = find.sagDast;
-      price.kaseCharkh = find.kaseCharkh;
-      price.fanar = find.fanar;
-      price.komakfanar = find.komakfanar;
-      price.plasticMotor = find.plasticMotor;
-      price.sayerMotor = find.sayerMotor;
-      price.sayerZir = find.sayerZir;
-      price.gearboxAuto = find.gearboxAuto;
-      price.gearboxManual = find.gearboxManual;
-      price.safeCluch = find.safeCluch;
-      price.milMahak = find.milMahak;
-      price.keshoie = find.keshoie;
-      price.shafetVorodi = find.shafetVorodi;
-      price.shafetKharoji = find.shafetKharoji;
-      price.charkhDande = find.charkhDande;
-      price.bolboring = find.bolboring;
-      price.hozing = find.hozing;
-      price.milGarden = find.milGarden;
-
-
-      }
-
-      else if(find == null)
-      {
-        _context.Prices.Add(price);
-        _context.SaveChanges();
-      }
-      return View(price);
       
     }
    
@@ -396,63 +333,76 @@ public class HomeController : Controller
       var find=_context.Prices.Where(x=>x.carId==price.carId).FirstOrDefault();
       if(find != null)
       {
-      find.carId = price.carId;
-      find.motorKamel = price.motorKamel;
-      find.blokSilandr = price.blokSilandr;
-      find.silandr = price.silandr;
-      find.sarSilandr = price.sarSilandr;
-      find.boshSilandr = price.boshSilandr;
-      find.waterPump = price.waterPump;
-      find.pichKarter = price.pichKarter;
-      find.karter = price.karter;
-      find.millang = price.millang;
-      find.ringPiston = price.ringPiston;
-      find.piston = price.piston;
-      find.fanarSopap = price.fanarSopap;
-      find.shaton = price.shaton;
-      find.flayol = price.flayol;
-      find.milSopap = price.milSopap;
-      find.sopap = price.sopap;
-      find.sopapPVC = price.sopapPVC;
-      find.motorStart = price.motorStart;
-      find.superCharger = price.superCharger;
-      find.turboCharger = price.turboCharger;
-      find.pumproghan = price.pumproghan;
-      find.manifold = price.manifold;
-      find.headers = price.headers;
-      find.hydrolic = price.hydrolic;
-      find.compersorColer = price.compersorColer;
-      find.jabeFarman = price.jabeFarman;
-      find.radiator = price.radiator;
-      find.carbirator = price.carbirator;
-      find.ring = price.ring;
-      find.sagDast = price.sagDast;
-      find.kaseCharkh = price.kaseCharkh;
-      find.fanar = price.fanar;
-      find.komakfanar = price.komakfanar;
-      find.plasticMotor = price.plasticMotor;
-      find.sayerMotor = price.sayerMotor;
-      find.sayerZir = price.sayerZir;
-      find.gearboxAuto = price.gearboxAuto;
-      find.gearboxManual = price.gearboxManual;
-      find.safeCluch = price.safeCluch;
-      find.milMahak = price.milMahak;
-      find.keshoie = price.keshoie;
-      find.shafetVorodi = price.shafetVorodi;
-      find.shafetKharoji = price.shafetKharoji;
-      find.charkhDande = price.charkhDande;
-      find.bolboring = price.bolboring;
-      find.hozing = price.hozing;
-      find.milGarden = price.milGarden;
-      _context.Prices.Update(find);
-      _context.SaveChanges();
+     
       }
-      return RedirectToAction("Service",new{id=price.carId});
+      return RedirectToAction("Service");
     }
       
 
+
+      //catdelete
+      public IActionResult Catdelete(int id)
     
+     {
+
+
+        //delete all  with by id
+        var q=_context.Categories.Where(x=>x.Id==id).FirstOrDefault();
+        _context.Categories.Remove(q);
+        _context.SaveChanges();
+
+        //delete all prices with carId
+        var q1=_context.Prices.Where(x=>x.carId==id).FirstOrDefault();
+        _context.Prices.Remove(q1);
+        _context.SaveChanges();
+
+        string msg="دسته بندی با موفقیت حذف شد";
+        
+
+
+         return RedirectToAction("Car",new{id=HttpContext.Session.GetInt32("id"),meesage=msg});
+
+     }
     
+
+    //mainservice
+    public IActionResult mainservice(int id)
+    {
+      
+      ///session add idcar
+      HttpContext.Session.SetInt32("idcar",id);
+
+      //if services is null
+      if(_context.Services.Count() == 0)
+      {
+        _context.Services.Add(new Service { Srvicename = "موتور", Parentid = 0, Status = "فعال" });
+        _context.Services.Add(new Service { Srvicename = "گیربکس", Parentid = 0, Status = "فعال" });
+        
+      }
+
+      _context.SaveChanges();
+      ViewBag.Services = _context.Services.Where(x=>x.Parentid==0).ToList();
+     
+        
+
+        return View();
+    }
+
+    //price
+    public IActionResult price(int serviceparentid)
+    {
+
+      //int id=HttpContext.Session.GetInt32("idcar").Value;
+      //viewbag carname
+    //  ViewBag.carname=_context.Categories.Find(id).CatName;
+      //list service
+      ViewBag.Services=_context.Services.Where(x=>x.Parentid==serviceparentid).ToList();
+      //Viewbag Srvicename parent
+      ViewBag.Srvicename=_context.Services.Find(serviceparentid).Srvicename;
+      return View();
+    }
+   
+
 
 }
 
