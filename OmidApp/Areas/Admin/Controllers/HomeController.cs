@@ -319,8 +319,8 @@ public class HomeController : Controller
     public IActionResult Service(int id)
     {
  
-      ViewBag.listService=_context.Prices.Where(x=>x.carId ==id).ToList();
-      ViewBag.catname=_context.Categories.Find(id).CatName;
+
+              ViewBag.catname=_context.Categories.Find(id).CatName;
 
       // find row with carId == id
       var find=_context.Prices.Where(x=>x.carId==id).FirstOrDefault();
@@ -389,6 +389,67 @@ public class HomeController : Controller
     }
    
     
+    // update price
+    [HttpPost]
+    public IActionResult ServiceUpdate(Price price)
+    {
+      var find=_context.Prices.Where(x=>x.carId==price.carId).FirstOrDefault();
+      if(find != null)
+      {
+      find.carId = price.carId;
+      find.motorKamel = price.motorKamel;
+      find.blokSilandr = price.blokSilandr;
+      find.silandr = price.silandr;
+      find.sarSilandr = price.sarSilandr;
+      find.boshSilandr = price.boshSilandr;
+      find.waterPump = price.waterPump;
+      find.pichKarter = price.pichKarter;
+      find.karter = price.karter;
+      find.millang = price.millang;
+      find.ringPiston = price.ringPiston;
+      find.piston = price.piston;
+      find.fanarSopap = price.fanarSopap;
+      find.shaton = price.shaton;
+      find.flayol = price.flayol;
+      find.milSopap = price.milSopap;
+      find.sopap = price.sopap;
+      find.sopapPVC = price.sopapPVC;
+      find.motorStart = price.motorStart;
+      find.superCharger = price.superCharger;
+      find.turboCharger = price.turboCharger;
+      find.pumproghan = price.pumproghan;
+      find.manifold = price.manifold;
+      find.headers = price.headers;
+      find.hydrolic = price.hydrolic;
+      find.compersorColer = price.compersorColer;
+      find.jabeFarman = price.jabeFarman;
+      find.radiator = price.radiator;
+      find.carbirator = price.carbirator;
+      find.ring = price.ring;
+      find.sagDast = price.sagDast;
+      find.kaseCharkh = price.kaseCharkh;
+      find.fanar = price.fanar;
+      find.komakfanar = price.komakfanar;
+      find.plasticMotor = price.plasticMotor;
+      find.sayerMotor = price.sayerMotor;
+      find.sayerZir = price.sayerZir;
+      find.gearboxAuto = price.gearboxAuto;
+      find.gearboxManual = price.gearboxManual;
+      find.safeCluch = price.safeCluch;
+      find.milMahak = price.milMahak;
+      find.keshoie = price.keshoie;
+      find.shafetVorodi = price.shafetVorodi;
+      find.shafetKharoji = price.shafetKharoji;
+      find.charkhDande = price.charkhDande;
+      find.bolboring = price.bolboring;
+      find.hozing = price.hozing;
+      find.milGarden = price.milGarden;
+      _context.Prices.Update(find);
+      _context.SaveChanges();
+      }
+      return RedirectToAction("Service",new{id=price.carId});
+    }
+      
 
     
     
