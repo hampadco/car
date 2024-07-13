@@ -306,6 +306,14 @@ public class HomeController : Controller
       ViewBag.meesage=meesage;
       return View();
     }
+
+    public IActionResult Service(int id)
+    {
+ 
+      ViewBag.listService=_context.Prices.Where(x=>x.carId ==id).ToList();
+      ViewBag.catname=_context.Categories.Find(id).CatName;
+      return View();
+    }
    
     
 

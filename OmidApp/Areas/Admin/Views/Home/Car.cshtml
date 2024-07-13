@@ -68,16 +68,18 @@
                                         <tr>
                                             <th>ردیف</th>
                                             <th>نام خودرو</th>
+                                            <th>لیست خدمات</th>
                                             <th>ویرایش</th>
                                             <th>حذف</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach (var item in ViewBag.listcars)
-                                        {
+                                        {   
                                             <tr>
                                                 <td>@item.Id</td>
                                                 <td>@item.CatName</td>
+                                                <td><a href="/admin/home/service?id=@item.Id " class="btn btn-primary">لیست خدمات</a></td>
                                                 <td><a href="/" class="btn btn-primary">ویرایش</a></td>
                                                 <td><a href="/" class="btn btn-danger">حذف</a></td>
                                             </tr>
