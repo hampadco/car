@@ -285,6 +285,15 @@ public class HomeController : Controller
       {
         msg="این دسته بندی قبلا ثبت شده است";
       }
+
+            // writed by mhd
+      //add a fild to price table with  carId 
+      //find carId by CatName
+      var find=_context.Categories.Where(x=>x.CatName==CatName).FirstOrDefault();
+          _context.Prices.Add(new Price{carId=find.Id});
+          _context.SaveChanges();
+
+
       //get id by session
       return RedirectToAction("car",new{id=HttpContext.Session.GetInt32("id"),meesage=msg});
 
@@ -312,7 +321,71 @@ public class HomeController : Controller
  
       ViewBag.listService=_context.Prices.Where(x=>x.carId ==id).ToList();
       ViewBag.catname=_context.Categories.Find(id).CatName;
-      return View();
+
+      // find row with carId == id
+      var find=_context.Prices.Where(x=>x.carId==id).FirstOrDefault();
+      Price price = new Price();
+      price.carId=id;
+      if(find != null)
+      {
+      price.motorKamel = find.motorKamel;
+      price.blokSilandr = find.blokSilandr;
+      price.silandr = find.silandr;
+      price.sarSilandr = find.sarSilandr;
+      price.boshSilandr = find.boshSilandr;
+      price.waterPump = find.waterPump;
+      price.pichKarter = find.pichKarter;
+      price.karter = find.karter;
+      price.millang = find.millang;
+      price.ringPiston = find.ringPiston;
+      price.piston = find.piston;
+      price.fanarSopap = find.fanarSopap;
+      price.shaton = find.shaton;
+      price.flayol = find.flayol;
+      price.milSopap = find.milSopap;
+      price.sopap = find.sopap;
+      price.sopapPVC = find.sopapPVC;
+      price.motorStart = find.motorStart;
+      price.superCharger = find.superCharger;
+      price.turboCharger = find.turboCharger;
+      price.pumproghan = find.pumproghan;
+      price.manifold = find.manifold;
+      price.headers = find.headers;
+      price.hydrolic = find.hydrolic;
+      price.compersorColer = find.compersorColer;
+      price.jabeFarman = find.jabeFarman;
+      price.radiator = find.radiator;
+      price.carbirator = find.carbirator;
+      price.ring = find.ring;
+      price.sagDast = find.sagDast;
+      price.kaseCharkh = find.kaseCharkh;
+      price.fanar = find.fanar;
+      price.komakfanar = find.komakfanar;
+      price.plasticMotor = find.plasticMotor;
+      price.sayerMotor = find.sayerMotor;
+      price.sayerZir = find.sayerZir;
+      price.gearboxAuto = find.gearboxAuto;
+      price.gearboxManual = find.gearboxManual;
+      price.safeCluch = find.safeCluch;
+      price.milMahak = find.milMahak;
+      price.keshoie = find.keshoie;
+      price.shafetVorodi = find.shafetVorodi;
+      price.shafetKharoji = find.shafetKharoji;
+      price.charkhDande = find.charkhDande;
+      price.bolboring = find.bolboring;
+      price.hozing = find.hozing;
+      price.milGarden = find.milGarden;
+
+
+      }
+
+      else if(find == null)
+      {
+        _context.Prices.Add(price);
+        _context.SaveChanges();
+      }
+      return View(price);
+      
     }
    
     

@@ -11,6 +11,8 @@ public class Price
 
     public int motorKamel { get; set; }
     public int blokSilandr { get; set; }
+    public int silandr { get; set; }
+
     public int sarSilandr { get; set; }
     public int boshSilandr { get; set; }
     public int waterPump { get; set; }
@@ -51,7 +53,6 @@ public class Price
 
     public int gearboxAuto { get; set; }
     public int gearboxManual { get; set; }
-
     public int safeCluch { get; set; }
     public int milMahak { get; set; }
     public int keshoie { get; set; }
@@ -61,7 +62,6 @@ public class Price
     public int bolboring { get; set; }
     public int hozing { get; set; }
     public int milGarden { get; set; }
-
 
 
 }
