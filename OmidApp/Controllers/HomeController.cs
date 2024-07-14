@@ -181,10 +181,123 @@ public IActionResult Car(int ParentId)
 }
 
 
+ public IActionResult mainservice(int id)
+    {
+        if (id != 0)
+        {
+          
+            System.Console.WriteLine("mainservice id:"+id);
+        }
+       
+      
+      ///session add idcar
+      HttpContext.Session.SetInt32("idcar",id);
+
+      //if services is null
+      if(db.Services.Count() == 0)
+      {
+        db.Services.Add(new Service { Srvicename = "موتور", Parentid = 0, Status = "فعال" });
+        db.Services.Add(new Service { Srvicename = "گیربکس", Parentid = 0, Status = "فعال" });
+        
+      }
+
+      db.SaveChanges();
+      ViewBag.Services = db.Services.Where(x=>x.Parentid==0).ToList();
+     
+        
+
+        return View();
+    }
 
 
 
 
+public IActionResult price(int serviceparentid)
+{
+    // TODO: Your code here
+     int? id = HttpContext.Session.GetInt32("idcar");
+    
+    if (id == null)
+    {
+        // Handle the case where the session variable is not set
+        return RedirectToAction("Index", "Home"); // or wherever you want to redirect
+    }
+
+    var category = db.Categories.Find(id.Value);
+    if (category == null)
+    {
+        // Handle show error
+        //log error
+        System.Console.WriteLine(id.Value);
+        System.Console.WriteLine("Category not found");
+        return NotFound( );
+
+        
+    }
+
+    ViewBag.carname = category.CatName;
+    
+    var services = db.Services.Where(x => x.Parentid == serviceparentid).ToList();
+    var prices = db.Prices.Where(p => p.carId == id.Value).ToDictionary(p => p.IdService, p => p.PriceValue);
+
+    foreach (var service in services)
+    {
+        if (prices.TryGetValue(service.Id, out int price))
+        {
+            service.Price = price;
+        }
+        else
+        {
+            service.Price = 0;
+        }
+    }
+
+    ViewBag.Services = services;
+    
+    var parentService = db.Services.Find(serviceparentid);
+    if (parentService == null)
+    {
+        // Handle the case where the parent service is not found
+        System.Console.WriteLine("Parent service not found");
+        return NotFound();
+    }
+
+    ViewBag.Srvicename = parentService.Srvicename;
+    
+    return View();
+}
 
 
+[HttpPost]
+    public IActionResult ProcessSelectedServices([FromBody] SelectedServicesModel model)
+    {
+        if (model == null || model.SelectedServices == null || model.SelectedServices.Count == 0)
+        {
+            return BadRequest("No services selected.");
+        }
+
+        // Here you can process the selected service IDs
+        foreach (var serviceId in model.SelectedServices)
+        {
+            // Example: Retrieve service details from the database
+            var service = db.Services.Find(serviceId);
+            if (service != null)
+            {
+                // Do something with the service
+                // For example, you might add it to an order or update its status
+            }
+        }
+
+        // After processing, you can return a success response
+        return Ok(new { message = "Services processed successfully", count = model.SelectedServices.Count });
+    }
+
+
+
+}
+
+
+public class SelectedServicesModel
+{
+    public List<int> SelectedServices { get; set; }
 }

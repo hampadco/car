@@ -8,5 +8,6 @@ public class Price
     public int IdService { get; set; }
 
     public int PriceValue { get; set; }
+    
 
 }

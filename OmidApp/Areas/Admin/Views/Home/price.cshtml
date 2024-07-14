@@ -30,7 +30,7 @@
 
 
 
-
+<form method="post" action="/Admin/Home/SavePrices">
                  
                     <div class="col-xl-12 xl-100 mt-7">
                         
@@ -51,29 +51,32 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    @{
-                                        int i = 1;
                                     
-                                        @foreach(var item in ViewBag.Services)
-                                        {
-                                            <tr>
-                                                <td>@i</td>
-                                                <td>@item.Srvicename</td>
-                                                <td>
-                                                @* input for price *@
-                                                <input type="text" class="form-control" value="0" />
-                                                
-                                                </td>
-
-                                                
-                                              
-                                               
-                                            </tr>
-                                            i++;
-                                        }
-                                        }
+                                         @{
+                                                int i = 1;
+                                                foreach(var item in ViewBag.Services)
+                                                {
+                                                    <tr>
+                                                        <td>@i</td>
+                                                        <td>@item.Srvicename</td>
+                                                        <td>
+                                                            <input type="hidden" name="ServiceIds" value="@item.Id" />
+                                                            <input type="text" class="form-control" name="Prices" value="@item.Price" />
+                                                        </td>
+                                                    </tr>
+                                                    i++;
+                                                }
+                                            }
                                     </tbody>
                                 </table>
+
+                            </div>
+
+                            @* button save and back *@
+
+                            <div class="col-12 text-center mt-7">
+                                <button class="btn btn-primary">ذخیره</button>
+                                <a href="/Admin/Home/category" class="btn btn-danger">بازگشت</a>
 
                             </div>
                             
@@ -89,4 +92,5 @@
                         
                     </div>
 
-  
+  </form>
+        </div>

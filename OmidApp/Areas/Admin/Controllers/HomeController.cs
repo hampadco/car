@@ -389,20 +389,91 @@ public class HomeController : Controller
     }
 
     //price
-    public IActionResult price(int serviceparentid)
+public IActionResult Price(int serviceparentid)
+{
+    int? id = HttpContext.Session.GetInt32("idcar");
+    
+    if (id == null)
     {
-
-      //int id=HttpContext.Session.GetInt32("idcar").Value;
-      //viewbag carname
-    //  ViewBag.carname=_context.Categories.Find(id).CatName;
-      //list service
-      ViewBag.Services=_context.Services.Where(x=>x.Parentid==serviceparentid).ToList();
-      //Viewbag Srvicename parent
-      ViewBag.Srvicename=_context.Services.Find(serviceparentid).Srvicename;
-      return View();
+        // Handle the case where the session variable is not set
+        return RedirectToAction("Index", "Home"); // or wherever you want to redirect
     }
+
+    var category = _context.Categories.Find(id.Value);
+    if (category == null)
+    {
+        // Handle the case where the category is not found
+        return NotFound();
+    }
+
+    ViewBag.carname = category.CatName;
+    
+    var services = _context.Services.Where(x => x.Parentid == serviceparentid).ToList();
+    var prices = _context.Prices.Where(p => p.carId == id.Value).ToDictionary(p => p.IdService, p => p.PriceValue);
+
+    foreach (var service in services)
+    {
+        if (prices.TryGetValue(service.Id, out int price))
+        {
+            service.Price = price;
+        }
+        else
+        {
+            service.Price = 0;
+        }
+    }
+
+    ViewBag.Services = services;
+    
+    var parentService = _context.Services.Find(serviceparentid);
+    if (parentService == null)
+    {
+        // Handle the case where the parent service is not found
+        return NotFound();
+    }
+
+    ViewBag.Srvicename = parentService.Srvicename;
+    
+    return View();
+}
+
+    [HttpPost]
+public IActionResult SavePrices(List<int> ServiceIds, List<int> Prices)
+{
+    int carId = HttpContext.Session.GetInt32("idcar").Value;
+
+    for (int i = 0; i < ServiceIds.Count; i++)
+    {
+        var price = new Price
+        {
+            carId = carId,
+            IdService = ServiceIds[i],
+            PriceValue = Prices[i]
+        };
+
+        // Check if a price already exists for this car and service
+        var existingPrice = _context.Prices.FirstOrDefault(p => p.carId == carId && p.IdService == ServiceIds[i]);
+        if (existingPrice != null)
+        {
+            existingPrice.PriceValue = Prices[i];
+        }
+        else
+        {
+            _context.Prices.Add(price);
+        }
+    }
+
+    _context.SaveChanges();
+
+    //get service parent id
+    int serviceparentid = _context.Services.Find(ServiceIds[0]).Parentid;
+
+
+    return RedirectToAction("Price", new { serviceparentid = serviceparentid });
+}
    
 
+   
 
 }
 
