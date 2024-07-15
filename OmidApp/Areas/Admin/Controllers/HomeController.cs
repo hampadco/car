@@ -555,6 +555,26 @@ public IActionResult RejectRequest(int id)
     return RedirectToAction("Request");
 }
 
+//delete request
+public IActionResult DeleteRequest(int id)
+{
+    var request = _context.Requests.Find(id);
+    if (request == null)
+    {
+        return NotFound();
+    }
+
+    _context.Requests.Remove(request);
+    _context.SaveChanges();
+
+    var orders = _context.Orders.Where(o => o.IdRequest == id).ToList();
+    _context.Orders.RemoveRange(orders);
+    _context.SaveChanges();
+
+
+    return RedirectToAction("Request");
+}
+
 // Path: OmidApp/Models/RequestModel.cs
 public class RequestModel
 {

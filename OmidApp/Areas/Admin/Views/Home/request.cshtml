@@ -95,8 +95,7 @@
                                                 <td>
                                                 
                                                     <a href="/admin/home/RequestDetails?id=@item.Id" class="btn btn-primary">مشاهده</a>
-                                                    <a href="/admin/home/" class="btn btn-danger">حذف</a>
-                                                </td>
+                                                    <td><a href="/admin/home/DeleteRequest?id=@item.Id" class="btn btn-danger" onclick="return confirm('ایا از حذف مطمئن هستید ')">حذف</a></td>                                                </td>
                                             </tr>
                                             i++;
                                         }
