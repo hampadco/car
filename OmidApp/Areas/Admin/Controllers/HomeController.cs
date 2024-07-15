@@ -524,6 +524,36 @@ public IActionResult RequestDetails(int id)
     return View(viewModel);
 }
 
+//accept request
+public IActionResult AcceptRequest(int id)
+{
+    var request = _context.Requests.Find(id);
+    if (request == null)
+    {
+        return NotFound();
+    }
+
+    request.Status = "تایید شده";
+    _context.SaveChanges();
+
+    return RedirectToAction("Request");
+}
+
+//reject request
+public IActionResult RejectRequest(int id)
+{
+    var request = _context.Requests.Find(id);
+    if (request == null)
+    {
+        return NotFound();
+    }
+
+    request.Status = "رد شده";
+    _context.SaveChanges();
+
+    return RedirectToAction("Request");
+}
+
 // Path: OmidApp/Models/RequestModel.cs
 public class RequestModel
 {

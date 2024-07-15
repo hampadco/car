@@ -55,32 +55,14 @@
                 <textarea id="additionalDescription" class="form-control" rows="3">@Model.Request.Description</textarea>
             </div>
 
-            <button type="button" class="btn btn-primary" onclick="saveAdditionalDescription(@Model.Request.Id)">ذخیره توضیحات</button>
+
+            <a type="button" class="btn btn-success" href="/admin/home/AcceptRequest?id=@Model.Request.Id" >تایید</a>
+
+            <br>
+            <a type="button" class="btn btn-danger" href="/admin/home/RejectRequest?id=@Model.Request.Id" >رد</a>
+            
+
         </div>
     </div>
 </div>
 
-<script>
-
-    function saveAdditionalDescription(requestId) {
-        var description = document.getElementById('additionalDescription').value;
-        $.ajax({
-            url: '/Home/SaveAdditionalDescription',
-            type: 'POST',
-            data: {
-                requestId: requestId,
-                description: description
-            },
-            success: function (response) {
-                if (response.success) {
-                    alert('توضیحات با موفقیت ذخیره شد.');
-                } else {
-                    alert('خطا در ذخیره توضیحات.');
-                }
-            },
-            error: function () {
-                alert('خطا در برقراری ارتباط با سرور.');
-            }
-        });
-    }
-</script>
