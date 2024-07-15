@@ -374,8 +374,33 @@ public IActionResult SaveAdditionalDescription(int requestId, string description
 
     return Ok(new { success = true, message = "Description saved successfully" });
 }
+
+
+
+public IActionResult request()
+{
+    var id=User.Identity.GetId();
+    var requests = db.Requests.Where(r => r.UserId == Convert.ToInt32(id)).ToList();
+
+    //create list of requestmodel
+    List<RequestModel> requestModels = new List<RequestModel>();
+    foreach (var request in requests)
+    {
+        var requestModel = new RequestModel
+        {
+            Id = request.Id,
+            CarName = request.CarName,
+            ParentServiceName = request.ParentServiceName,
+            Date = request.CreateDate,
+            Status = request.Status
+        };
+        requestModels.Add(requestModel);
+    }
+    return View(requestModels);
 }
 
+
+}
 
 
 public class SelectedServicesModel
@@ -396,3 +421,13 @@ public class SelectedServicesModel
 
     // SaveAdditionalDescription
 
+    public class RequestModel
+    {
+        public int Id { get; set; }
+        public string CarName { get; set; }
+
+        public string ParentServiceName { get; set; }
+
+        public DateTime Date { get; set; }
+        public string Status { get; set; }
+    }
