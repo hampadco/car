@@ -9,6 +9,9 @@ public class Orders
     public string ChildServiceName { get; set; }
 
     public int Price { get; set; }
+
+    public virtual Request Request { get; set; }
+
     
     
     

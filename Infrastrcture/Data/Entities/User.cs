@@ -10,4 +10,5 @@ public class User
     public string Url  { get; set; }
     public int Code { get; set; }
     public string Cart { get; set; }
+    public string Adress { get; set; }
 }

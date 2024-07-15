@@ -38,7 +38,7 @@ public class PhoneController : Controller
 
     }
 
-    public IActionResult Check(string phone, string name, string password,string dev,string url)
+    public IActionResult Check(string phone, string name, string password,string dev,string url,string Adress)
 {
     //check if user exist into _context
     var user = _context.Users.FirstOrDefault(u => u.Phone == phone);
@@ -62,6 +62,7 @@ public class PhoneController : Controller
                     Url = url,
                     Code = 0,
                     Cart = "0",
+                    Adress = Adress
                 };
                 _context.Users.Add(us);
                 _context.SaveChanges();

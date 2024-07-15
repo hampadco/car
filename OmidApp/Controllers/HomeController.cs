@@ -4,6 +4,7 @@ using Infrastrcture.Migrations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using OmidApp.Models;
 namespace OmidApp.Controllers;
 [Authorize]
@@ -332,9 +333,32 @@ public IActionResult price(int serviceparentid)
         }
 
         // Areturn redirect to action and send request id
-        return RedirectToAction("RequestDetail", new { id = Request.Id });
+        return Ok(new { message = "Request created successfully", requestId = Request.Id });
         
     }
+public IActionResult RequestDetail(int id)
+{
+    var request = db.Requests.Find(id);
+    if (request == null)
+    {
+        return NotFound();
+    }
+
+    var user = db.Users.Find(request.UserId);
+    var orders = db.Orders.Where(o => o.IdRequest == id).ToList();
+
+    var viewModel = new RequestDetailViewModel
+    {
+        Request = request,
+        User = user,
+        Orders = orders,
+        TotalPrice = orders.Sum(o => o.Price)
+    };
+
+    return View(viewModel);
+}
+    
+
 
 
 
@@ -345,3 +369,13 @@ public class SelectedServicesModel
 {
     public List<int> SelectedServices { get; set; }
 }
+
+
+
+    public class RequestDetailViewModel
+    {
+        public Request Request { get; set; }
+        public User User { get; set; }
+        public List<Orders> Orders { get; set; }
+        public int TotalPrice { get; set; }
+    }

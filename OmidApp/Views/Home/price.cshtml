@@ -65,7 +65,7 @@ document.getElementById('serviceForm').addEventListener('submit', function(e) {
     .then(response => response.json())
     .then(data => {
         console.log('Success:', data);
-        // Handle success (e.g., show a success message)
+        window.location.href = `/home/RequestDetail/${data.requestId}`;
     })
     .catch((error) => {
         console.error('Error:', error);

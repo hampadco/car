@@ -10,5 +10,6 @@ public class VmUser
     public int Code { get; set; }
     public string Cart { get; set; }
     public int CorrectAnswer { get; set; }
+    public string Adress { get; set; }
 
 }

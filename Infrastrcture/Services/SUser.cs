@@ -56,6 +56,7 @@ public class SUser : IUser
           Phone=q.Phone,
           Email=q.Email,
           Code=q.Code,
+          Adress=q.Adress,
          
       };
       
@@ -105,6 +106,7 @@ public class SUser : IUser
             Phone=quser.Phone,
             Email=quser.Email,
             Code=quser.Code,
+            Adress=quser.Adress,
         };
         return u;
     }
@@ -140,6 +142,7 @@ public class SUser : IUser
                 Phone=item.Phone,
                 Email=item.Email,
                 Code=item.Code,
+                Adress=item.Adress,
             };
             u.Add(v);
         }
@@ -169,6 +172,7 @@ public class SUser : IUser
                 Phone=item.Phone,
                 Email=item.Email,
                 Code=item.Code,
+                Adress=item.Adress,
             };
             u.Add(v);
         }
@@ -210,6 +214,7 @@ public class SUser : IUser
                 Code = quser.Code,
                 Cart = quser.Cart,
                 Url = quser.Url,
+                Adress = quser.Adress
             };
             return us;
         }
