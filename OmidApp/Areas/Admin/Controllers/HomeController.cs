@@ -502,15 +502,49 @@ public IActionResult SavePrices(List<int> ServiceIds, List<int> Prices)
 
 }
 
+//show request details
+public IActionResult RequestDetails(int id)
+{
+    var request = _context.Requests.Find(id);
+    if (request == null)
+    {
+        return NotFound();
+    }
+
+    var user = _context.Users.Find(request.UserId);
+    var orders = _context.Orders.Where(o => o.IdRequest == id).ToList();
+    var viewModel = new RequestDetailViewModel
+    {
+        Request = request,
+        User = user,
+        Orders = orders,
+        TotalPrice = orders.Sum(o => o.Price)
+    };
+
+    return View(viewModel);
+}
+
 // Path: OmidApp/Models/RequestModel.cs
 public class RequestModel
 {
     public int Id { get; set; }
     public int UserId { get; set; }
     public string UserName { get; set; }
+
+    public string tamirgah { get; set; }
     public string Adress { get; set; }
     public string UserPhone { get; set; }
     public DateTime Date { get; set; }
     public string Status { get; set; }
-}}
+}
+
+    public class RequestDetailViewModel
+    {
+        public Request Request { get; set; }
+        public User User { get; set; }
+        public List<Orders> Orders { get; set; }
+        public int TotalPrice { get; set; }
+    }
+
+}
 
