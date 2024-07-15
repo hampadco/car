@@ -11,6 +11,8 @@ public class Context:DbContext
     public DbSet<Price> Prices { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Service> Services { get; set; }
+    public DbSet<Request> Requests { get; set; }
+    public DbSet<Orders> Orders { get; set; }
        
     
     // protected override void OnConfiguring(DbContextOptionsBuilder db)

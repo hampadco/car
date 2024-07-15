@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Security.Claims;
+using Infrastrcture.Migrations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -187,11 +188,12 @@ public IActionResult Car(int ParentId)
         {
           
             System.Console.WriteLine("mainservice id:"+id);
+             HttpContext.Session.SetInt32("idcar",id);
         }
        
       
       ///session add idcar
-      HttpContext.Session.SetInt32("idcar",id);
+     
 
       //if services is null
       if(db.Services.Count() == 0)
@@ -216,6 +218,7 @@ public IActionResult price(int serviceparentid)
 {
     // TODO: Your code here
      int? id = HttpContext.Session.GetInt32("idcar");
+      System.Console.WriteLine("idcar:"+id);
     
     if (id == null)
     {
@@ -271,25 +274,66 @@ public IActionResult price(int serviceparentid)
 [HttpPost]
     public IActionResult ProcessSelectedServices([FromBody] SelectedServicesModel model)
     {
-        if (model == null || model.SelectedServices == null || model.SelectedServices.Count == 0)
-        {
-            return BadRequest("No services selected.");
-        }
 
-        // Here you can process the selected service IDs
-        foreach (var serviceId in model.SelectedServices)
+
+        //use Transaction
+       var Request=new Request();
+        using (var transaction = db.Database.BeginTransaction())
         {
-            // Example: Retrieve service details from the database
-            var service = db.Services.Find(serviceId);
-            if (service != null)
+
+
+          
+            var idcar = HttpContext.Session.GetInt32("idcar");
+            if (model == null || model.SelectedServices == null || model.SelectedServices.Count == 0)
             {
-                // Do something with the service
-                // For example, you might add it to an order or update its status
+                return BadRequest("No services selected.");
+            }else
+            {
+            
+                Request.CreateDate=DateTime.Now;
+                Request.Status="پیش فاکتور";
+                //get id  NameIdentifier, quser.Id.ToString()),
+                var id=User.Identity.GetId();
+                Request.UserId=Convert.ToInt32(id);
+                //car name get seeionidcar quesry
+                
+                var category = db.Categories.Find(idcar.Value);
+                Request.CarName=category.CatName;
+                //find parendname one model data
+                var parentService = db.Services.Find(model.SelectedServices[0]).Parentid;
+                Request.ParentServiceName= db.Services.Find(parentService).Srvicename;
+                Request.Description="";
+                db.Requests.Add(Request);
+                db.SaveChanges();
+
             }
+
+            // Here you can process the selected service IDs
+            foreach (var serviceId in model.SelectedServices)
+            {
+                // Example: Retrieve service details from the database
+                var service = db.Services.Find(serviceId);
+                if (service != null)
+                {
+                    var order=new Orders();
+                    order.ChildServiceName=service.Srvicename;
+                    //price query table price
+                    var price = db.Prices.FirstOrDefault(p => p.IdService == service.Id && p.carId ==idcar.Value);
+                    order.Price=price.PriceValue;
+                    order.IdRequest=Request.Id;
+                    db.Orders.Add(order);
+                    db.SaveChanges();
+
+                }
+            }
+
+                        transaction.Commit();
+
         }
 
-        // After processing, you can return a success response
-        return Ok(new { message = "Services processed successfully", count = model.SelectedServices.Count });
+        // Areturn redirect to action and send request id
+        return RedirectToAction("RequestDetail", new { id = Request.Id });
+        
     }
 
 
