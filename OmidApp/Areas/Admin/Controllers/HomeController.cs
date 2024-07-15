@@ -488,6 +488,7 @@ public IActionResult SavePrices(List<int> ServiceIds, List<int> Prices)
             UserName = user.FirstAndLastName,
             Adress = user.Adress,
             UserPhone = user.Phone,
+            tamirgah = user.Url,
             Date = request.CreateDate,
             Status = request.Status
         };
