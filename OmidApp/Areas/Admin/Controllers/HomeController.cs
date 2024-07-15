@@ -471,10 +471,46 @@ public IActionResult SavePrices(List<int> ServiceIds, List<int> Prices)
 
     return RedirectToAction("Price", new { serviceparentid = serviceparentid });
 }
-   
+
+  // get all request and sent with user detalis to front by model
+
+  public IActionResult Request()
+  {
+    var requests = _context.Requests.ToList();
+    var requestModels = new List<RequestModel>();
+    foreach (var request in requests)
+    {
+        var user = _context.Users.Find(request.UserId);
+        var requestModel = new RequestModel
+        {
+            Id = request.Id,
+            UserId = request.UserId,
+            UserName = user.FirstAndLastName,
+            Adress = user.Adress,
+            UserPhone = user.Phone,
+            Date = request.CreateDate,
+            Status = request.Status
+        };
+        requestModels.Add(requestModel);
+    }
+
+    return View(requestModels);
+ 
+
 
    
 
 }
 
+// Path: OmidApp/Models/RequestModel.cs
+public class RequestModel
+{
+    public int Id { get; set; }
+    public int UserId { get; set; }
+    public string UserName { get; set; }
+    public string Adress { get; set; }
+    public string UserPhone { get; set; }
+    public DateTime Date { get; set; }
+    public string Status { get; set; }
+}}
 
