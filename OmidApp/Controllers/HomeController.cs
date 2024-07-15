@@ -359,10 +359,23 @@ public IActionResult RequestDetail(int id)
 }
     
 
+[HttpPost]
+public IActionResult SaveAdditionalDescription(int requestId, string description)
+{
+    var request = db.Requests.Find(requestId);
+    if (request == null)
+    {
+        return NotFound(new { success = false, message = "Request not found" });
+    }
 
+    request.Description = description;
+    request.Status = "در انتظار تایید";
+    db.SaveChanges();
 
-
+    return Ok(new { success = true, message = "Description saved successfully" });
 }
+}
+
 
 
 public class SelectedServicesModel
@@ -379,3 +392,7 @@ public class SelectedServicesModel
         public List<Orders> Orders { get; set; }
         public int TotalPrice { get; set; }
     }
+
+
+    // SaveAdditionalDescription
+

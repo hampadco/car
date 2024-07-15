@@ -60,29 +60,27 @@
     </div>
 </div>
 
+<script>
 
-    <script>
     function saveAdditionalDescription(requestId) {
         var description = document.getElementById('additionalDescription').value;
-        fetch('/Home/SaveAdditionalDescription', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('input[name="__RequestVerificationToken"]').value
+        $.ajax({
+            url: '/Home/SaveAdditionalDescription',
+            type: 'POST',
+            data: {
+                requestId: requestId,
+                description: description
             },
-            body: JSON.stringify({ requestId: requestId, description: description })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('توضیحات با موفقیت ذخیره شد.');
-            } else {
-                alert('خطا در ذخیره توضیحات.');
+            success: function (response) {
+                if (response.success) {
+                    alert('توضیحات با موفقیت ذخیره شد.');
+                } else {
+                    alert('خطا در ذخیره توضیحات.');
+                }
+            },
+            error: function () {
+                alert('خطا در برقراری ارتباط با سرور.');
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('خطا در ارتباط با سرور.');
         });
     }
-    </script>
+</script>
