@@ -70,6 +70,7 @@
                                     <tr>
                                         <th>ردیف</th>
                                         <th>نام</th>
+                                        <th>نام تعمیرگاه</th>
                                         <th>آدرس</th>
                                         <th>شماره تلفن</th>
                                         <th>تاریخ ثبت</th>
@@ -86,13 +87,14 @@
                                             <tr>
                                                 <td>@i</td>
                                                 <td>@item.UserName</td>
+                                                <td>@item.tamirgah</td>
                                                 <td>@item.Adress</td>
                                                 <td>@item.UserPhone</td>
                                                 <td>@item.Date</td>
                                                 <td>@item.Status</td>
                                                 <td>
                                                 
-                                                    <a href="/admin/home/" class="btn btn-primary">مشاهده</a>
+                                                    <a href="/admin/home/RequestDetails?id=@item.Id" class="btn btn-primary">مشاهده</a>
                                                     <a href="/admin/home/" class="btn btn-danger">حذف</a>
                                                 </td>
                                             </tr>
