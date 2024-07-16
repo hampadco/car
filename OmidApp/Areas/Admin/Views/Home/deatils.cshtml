@@ -28,7 +28,10 @@
             </div>
 
 
-             
+             @if (TempData["msg"] != null)
+             {
+                <p class="alert alert-danger p-3 form-control">@TempData["msg"]</p>
+             }
 
 
 
@@ -40,82 +43,72 @@
                         <div class="card">
                             <div class="card-header">
 
-                              
+                              <form action="/admin/home/index" method="post">
+                                   <div class="row justify-content-center  p-3" >
 
-
-
-                                <h5>   تعداد مسابقات :
-                                     @if (ViewBag.User != null)
-                                            {
-                                                 @ViewBag.User.Count
-                                            }else{
-                                               <Span>0</Span>
-                                            }
-</h5>
-
-  @* search *@
-
-                                @* <div class="card-header-right">
-                                    <ul class="list-unstyled card-option">
-                                        <li><i class="icofont icofont-simple-left"></i></li>
-                                        <li><i class="view-html fa fa-code"></i></li>
-                                        <li><i class="icofont icofont-maximize full-card"></i></li>
-                                        <li><i class="icofont icofont-minus minimize-card"></i></li>
-                                        <li><i class="icofont icofont-refresh reload-card"></i></li>
-                                        <li><i class="icofont icofont-error close-card"></i></li>
-                                    </ul>
-                                </div> *@
-                            </div>
-                            <div class="card-body">
-                                <div class="user-status table-responsive latest-order-table">
-                                    <table class="table table-bordernone">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">ردیف </th>
-                                            <th scope="col"> نام و نام خانوادگی</th>
-                                            <th scope="col">شماره تماس </th>
-                                            <th scope="col">تاریخ</th>
-                                            <th scope="col">امتیاز</th>
-
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                            @if (ViewBag.User != null)
-                                            {
-                                                int i=1;
+                                            <div class="col-xxl-6 col-lg-6 col-xl-6 col-md-6 col-12">
+                                                <input name="txt" class="form-control" type="text" placeholder="جستجوی شماره تلفن یا نام">
                                             
 
+                                            </div>
 
-                                            @foreach (var item in ViewBag.User)
-                                            {
-                                                    <tr>
-                                                        <td>@i</td>
-                                                        <td class="digits">@item.Fullname</td>
-                                                        <td class="font-danger"> @item.Phone 	</td>
-                                                        <td class="digits"> 
-                                                            @item.Tarikh
-                                                        </td>
-                                                        <td class="digits"> 
-                                                            @if (item.Rate>0)
-                                                            {
-                                                                <p class="alert alert-success form-control text-center" dir="ltr">@item.Rate</p>
-                                                                
-                                                            }
-                                                            else
-                                                            {
-                                                                <p class="alert alert-danger form-control text-center" dir="ltr">@item.Rate</p>
-                                                            }
-                                                           
-                                                        </td>
-                                                   
-                                                    </tr>
-                                                     i++;
-                                            }
+                                            <div class="col-xxl-2 col-lg-2 col-xl-2 col-md-2 col-12 mt-1 ">
+                                                <button type="submit" class="btn btn-primary form-control">جستجو</button>
+
+                                            </div>
+
+                                    </div>
+                               </form>
+
+
+                        
+                        @* show all request  *@
+
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ردیف</th>
+                                        <th>نام خودرو</th>
+                                        <th>نام سرویس</th>
+                                        <th>تاریخ</th>
+                                        <th>وضعیت</th>
+                                        <th>عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null)
+                                    {
+                                        int i = 1;
+                                        foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td>@i</td>
+                                                <td>@item.CarName</td>
+                                                <td>@item.ParentServiceName</td>
+                                                <td>@item.Date</td>
+                                                <td>@item.Status</td>
+                                                <td>
+                                                
+                                                    <a href="/admin/home/RequestDetails?id=@item.Id" class="btn btn-primary">مشاهده</a>
+                                                    <a href="/admin/home/DeleteRequestt?id=@item.Id" class="btn btn-danger" onclick="return confirm('ایا از حذف مطمئن هستید')">حذف</a>
+
+                                                </td>
+                                            </tr>
+                                            i++;
                                         }
-                                        
+                                    }
+                                </tbody>
+                            </table>
 
-                            </div>
-                        </div>
+                            
+
+
+                                
+
+                             
+
+
                     </div>
 
                 </div>

@@ -168,14 +168,27 @@ public class HomeController : Controller
        return RedirectToAction("walet",new {phone=HttpContext.Session.GetString("phone")});
     }
     
-    public async Task<IActionResult> deatilsAsync(int id)
+public IActionResult deatils(int id)
+{
+    var requests = _context.Requests.Where(r => r.UserId == Convert.ToInt32(id)).ToList();
+
+    //create list of requestmodel
+    List<RequestModel2> requestModels = new List<RequestModel2>();
+    foreach (var request in requests)
     {
-       
-          
-      
-       
-           return View();
+        var requestModel = new RequestModel2
+        {
+            Id = request.Id,
+            CarName = request.CarName,
+            ParentServiceName = request.ParentServiceName,
+            Date = request.CreateDate,
+            Status = request.Status
+        };
+        requestModels.Add(requestModel);
     }
+    return View(requestModels);
+}
+
 
     public IActionResult agent(string txt)
     {
@@ -564,7 +577,8 @@ public IActionResult RejectRequest(int id)
     return RedirectToAction("Request");
 }
 
-//delete request
+//delete request and return to last Iaction
+
 public IActionResult DeleteRequest(int id)
 {
     var request = _context.Requests.Find(id);
@@ -580,8 +594,27 @@ public IActionResult DeleteRequest(int id)
     _context.Orders.RemoveRange(orders);
     _context.SaveChanges();
 
-
     return RedirectToAction("Request");
+
+}
+
+public IActionResult DeleteRequestt(int id)
+{
+    var request = _context.Requests.Find(id);
+    if (request == null)
+    {
+        return NotFound();
+    }
+
+    _context.Requests.Remove(request);
+    _context.SaveChanges();
+
+    var orders = _context.Orders.Where(o => o.IdRequest == id).ToList();
+    _context.Orders.RemoveRange(orders);
+    _context.SaveChanges();
+
+    return RedirectToAction("deatils",new{id=request.UserId});
+
 }
 
 // Path: OmidApp/Models/RequestModel.cs
@@ -617,6 +650,17 @@ public class RequestListViewModel
         public User User { get; set; }
         public List<Orders> Orders { get; set; }
         public int TotalPrice { get; set; }
+    }
+
+        public class RequestModel2
+    {
+        public int Id { get; set; }
+        public string CarName { get; set; }
+
+        public string ParentServiceName { get; set; }
+
+        public DateTime Date { get; set; }
+        public string Status { get; set; }
     }
 
 }
