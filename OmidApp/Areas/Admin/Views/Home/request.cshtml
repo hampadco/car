@@ -1,3 +1,5 @@
+@model List<HomeController.RequestModel>
+
 <style>
     th, td, tr {
         padding: 5px;
@@ -60,55 +62,58 @@
                                     </div>
                                </form>
 
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ردیف</th>
+                <th>نام</th>
+                <th>نام تعمیرگاه</th>
+                <th>آدرس</th>
+                <th>شماره تلفن</th>
+                <th>تاریخ ثبت</th>
+                <th>وضعیت</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int index = 1 + ((int)ViewData["CurrentPage"] - 1) * 10;}
+            
+            @foreach (var item in Model)
+            {
+                
+                <tr>
+                    <td>@index</td>
+                    <td>@item.UserName</td>
+                    <td>@item.tamirgah</td>
+                    <td>@item.Adress</td>
+                    <td>@item.UserPhone</td>
+                    <td>@item.Date</td>
+                    <td>@item.Status</td>
+                    <td>
+                        <a href="/admin/home/RequestDetails?id=@item.Id" class="btn btn-primary">مشاهده</a>
+                        <a href="/admin/home/DeleteRequest?id=@item.Id" class="btn btn-danger" onclick="return confirm('ایا از حذف مطمئن هستید')">حذف</a>
+                    </td>
+                </tr>
 
-                        
-                        @* show all request  *@
+                index++;
+            }
+        </tbody>
+    </table>
+</div>
 
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>ردیف</th>
-                                        <th>نام</th>
-                                        <th>نام تعمیرگاه</th>
-                                        <th>آدرس</th>
-                                        <th>شماره تلفن</th>
-                                        <th>تاریخ ثبت</th>
-                                        <th>وضعیت</th>
-                                        <th>عملیات</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (Model != null)
-                                    {
-                                        int i = 1;
-                                        foreach (var item in Model)
-                                        {
-                                            <tr>
-                                                <td>@i</td>
-                                                <td>@item.UserName</td>
-                                                <td>@item.tamirgah</td>
-                                                <td>@item.Adress</td>
-                                                <td>@item.UserPhone</td>
-                                                <td>@item.Date</td>
-                                                <td>@item.Status</td>
-                                                <td>
-                                                
-                                                    <a href="/admin/home/RequestDetails?id=@item.Id" class="btn btn-primary">مشاهده</a>
-                                                    <td><a href="/admin/home/DeleteRequest?id=@item.Id" class="btn btn-danger" onclick="return confirm('ایا از حذف مطمئن هستید ')">حذف</a></td>                                                </td>
-                                            </tr>
-                                            i++;
-                                        }
-                                    }
-                                </tbody>
-                            </table>
-
-                            
-
-
-                                
-
-                             
+<!-- Pagination -->
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        @for (int i = 1; i <= (int)ViewData["TotalPages"]; i++)
+        {
+            <li class="page-item @(i == (int)ViewData["CurrentPage"] ? "active" : "")">
+                <a class="page-link" href="/admin/home/Request?page=@i">@i</a>
+            </li>
+        }
+    </ul>
+</nav>
 
 
                     </div>
@@ -119,4 +124,3 @@
 
         </div>
 
-  

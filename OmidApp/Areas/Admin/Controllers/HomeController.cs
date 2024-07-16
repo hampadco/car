@@ -474,10 +474,11 @@ public IActionResult SavePrices(List<int> ServiceIds, List<int> Prices)
 
   // get all request and sent with user detalis to front by model
 
-  public IActionResult Request()
-  {
+ public IActionResult Request(int page = 1, int pageSize = 10)
+{
     var requests = _context.Requests.ToList();
     var requestModels = new List<RequestModel>();
+    
     foreach (var request in requests)
     {
         var user = _context.Users.Find(request.UserId);
@@ -495,13 +496,21 @@ public IActionResult SavePrices(List<int> ServiceIds, List<int> Prices)
         requestModels.Add(requestModel);
     }
 
-    return View(requestModels);
- 
+    // Pagination logic
+    var paginatedRequests = requestModels.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
+    // Calculate total pages
+    var totalPages = (int)Math.Ceiling(requestModels.Count / (double)pageSize);
 
-   
+    ViewData["TotalPages"] = totalPages;
+    ViewData["CurrentPage"] = page;
 
+    return View(paginatedRequests);
 }
+
+
+
+
 
 //show request details
 public IActionResult RequestDetails(int id)
@@ -588,6 +597,19 @@ public class RequestModel
     public DateTime Date { get; set; }
     public string Status { get; set; }
 }
+
+public class RequestListViewModel
+{
+    public List<RequestModel> Requests { get; set; }
+    public int CurrentPage { get; set; }
+    public int PageSize { get; set; }
+    public int TotalRequests { get; set; }
+
+    public int TotalPages => (int)Math.Ceiling((decimal)TotalRequests / PageSize);
+}
+
+
+
 
     public class RequestDetailViewModel
     {
