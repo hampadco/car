@@ -11,4 +11,9 @@ public class User
     public int Code { get; set; }
     public string Cart { get; set; }
     public string Adress { get; set; }
+    public string Latitude { get; set; }
+    public string Longitude { get; set; }
+    public int free { get; set; }
+    public int use { get; set; }
+
 }

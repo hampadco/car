@@ -32,11 +32,27 @@ public class HomeController : Controller
       //search
      
          ViewBag.User=dbUser.ShowAllUser(txt);
-      
-       
-      
-
+         return View();
+    }
+  public IActionResult set(int Id)
+    {
+        //get user by id context
+        var user=_context.Users.Find(Id);
+        ViewBag.User=user;
         return View();
+         
+    }
+
+    public IActionResult setnew(int id,int free)
+    {
+        //get user by id context
+        var user=_context.Users.Find(id);
+        user.free=free;
+       
+        _context.Users.Update(user);
+        _context.SaveChanges();
+        return RedirectToAction("index");
+         
     }
      public IActionResult login()
     {
@@ -181,7 +197,7 @@ public IActionResult deatils(int id)
             Id = request.Id,
             CarName = request.CarName,
             ParentServiceName = request.ParentServiceName,
-            Date = request.CreateDate,
+            Date = request.CreateDate.ToPersianDateString(),
             Status = request.Status
         };
         requestModels.Add(requestModel);
@@ -489,7 +505,7 @@ public IActionResult SavePrices(List<int> ServiceIds, List<int> Prices)
 
  public IActionResult Request(int page = 1, int pageSize = 10)
 {
-    var requests = _context.Requests.ToList();
+    var requests = _context.Requests.OrderByDescending(x=>x.Id).ToList();
     var requestModels = new List<RequestModel>();
     
     foreach (var request in requests)
@@ -503,7 +519,7 @@ public IActionResult SavePrices(List<int> ServiceIds, List<int> Prices)
             Adress = user.Adress,
             UserPhone = user.Phone,
             tamirgah = user.Url,
-            Date = request.CreateDate,
+            Date = request.CreateDate.ToPersianDateString(),
             Status = request.Status
         };
         requestModels.Add(requestModel);
@@ -543,6 +559,8 @@ public IActionResult RequestDetails(int id)
         Orders = orders,
         TotalPrice = orders.Sum(o => o.Price)
     };
+    ViewBag.Latitude = user.Latitude;
+    ViewBag.Longitude = user.Longitude;
 
     return View(viewModel);
 }
@@ -557,6 +575,31 @@ public IActionResult AcceptRequest(int id)
     }
 
     request.Status = "تایید شده";
+    _context.SaveChanges();
+
+    //get user by id and mineze free
+    var user = _context.Users.Find(request.UserId);
+    
+    user.use += 1;
+    _context.SaveChanges();
+
+    return RedirectToAction("Request");
+}
+
+public IActionResult AcceptRequest2(int id)
+{
+    var request = _context.Requests.Find(id);
+    if (request == null)
+    {
+        return NotFound();
+    }
+
+    request.Status = "اتمام و ارسال شده ";
+    _context.SaveChanges();
+     //get user by id and mineze free
+    var user = _context.Users.Find(request.UserId);
+   
+    user.use += 1;
     _context.SaveChanges();
 
     return RedirectToAction("Request");
@@ -627,7 +670,7 @@ public class RequestModel
     public string tamirgah { get; set; }
     public string Adress { get; set; }
     public string UserPhone { get; set; }
-    public DateTime Date { get; set; }
+    public string Date { get; set; }
     public string Status { get; set; }
 }
 
@@ -659,9 +702,33 @@ public class RequestListViewModel
 
         public string ParentServiceName { get; set; }
 
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         public string Status { get; set; }
     }
+
+    public IActionResult NewRequest(int id)
+{
+    var request = _context.Requests.Find(id);
+    if (request == null)
+    {
+        return NotFound();
+    }
+
+    var user = _context.Users.Find(request.UserId);
+    var orders = _context.Orders.Where(o => o.IdRequest == id).ToList();
+    var viewModel = new RequestDetailViewModel
+    {
+        Request = request,
+        User = user,
+        Orders = orders,
+        TotalPrice = orders.Sum(o => o.Price)
+    };
+    ViewBag.Latitude = user.Latitude;
+    ViewBag.Longitude = user.Longitude;
+
+    return View(viewModel);
+}
+
 
 }
 

@@ -16,6 +16,8 @@ public class UserController : Controller
     {
         var id=User.Identity.GetId();
         var user=db.ShowUser(Convert.ToInt32(id));
+        ViewBag.Latitude = user.Latitude;
+        ViewBag.Longitude = user.Longitude;
         return View(user);
     }
     public IActionResult EditProfile(VmUser u)

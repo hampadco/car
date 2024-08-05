@@ -11,11 +11,11 @@
                     <p><strong>نام و نام خانوادگی:</strong> @Model.User.FirstAndLastName</p>
                     <p><strong>نام تعمیرگاه:</strong> @Model.User.Url</p>
                     <p><strong>شماره تلفن:</strong> @Model.User.Phone</p>
-                    <p><strong>آدرس:</strong> @Model.User.Url</p>
+                    <p><strong>آدرس:</strong> @Model.User.Adress</p>
                 </div>
                 <div class="col-md-6">
                     <h4>اطلاعات درخواست</h4>
-                    <p><strong>تاریخ درخواست:</strong> @Model.Request.CreateDate.ToString("yyyy/MM/dd")</p>
+                    <p><strong>تاریخ درخواست:</strong> @Model.Request.CreateDate.ToPersianDateString()</p>
                     <p><strong>نام ماشین:</strong> @Model.Request.CarName</p>
                     <p><strong>سرویس اصلی:</strong> @Model.Request.ParentServiceName</p>
                 </div>
@@ -55,7 +55,13 @@
                 <textarea id="additionalDescription" class="form-control" rows="3">@Model.Request.Description</textarea>
             </div>
 
-            <button type="button" class="btn btn-primary" onclick="saveAdditionalDescription(@Model.Request.Id)">ذخیره توضیحات</button>
+            @if(Model.Request.Status == "پیش فاکتور")
+            {
+                          <button type="button" class="btn btn-primary" onclick="saveAdditionalDescription(@Model.Request.Id)">ارسال درخواست </button>
+                          }
+                          else{
+                            <button type="button" class="btn btn-warning" disabled> @Model.Request.Status  </button>
+                          }
         </div>
     </div>
 </div>
@@ -74,6 +80,9 @@
             success: function (response) {
                 if (response.success) {
                     alert('توضیحات با موفقیت ذخیره شد.');
+                    // redirect to /home/request
+                    window.location.href = '/home/request';
+
                 } else {
                     alert('خطا در ذخیره توضیحات.');
                 }

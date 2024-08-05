@@ -89,7 +89,7 @@
                                 <td scope="col">نام تعمیرگاه </td>
                                 <td scope="col">شماره تماس</td>
                                 <td scope="col">رمز عبور</td>
-                                <td scope="col">کیف پول</td>
+                                <td scope="col">شاخصه سرویس رایگان</td>
                                 <td scope="col">سفارشات</td>
                                 
                               
@@ -109,17 +109,25 @@
                                 <td class="digits"> @item.Phone</td>
                                   <td class="digits"> @item.Email</td>
 
-                                <td class="font-danger"> <a href="/admin/home/walet?phone=@item.Phone" class="btn btn-danger"> مشاهده و شارژ کیف پول</a>
+                                <td class="font-danger"> 
+
+                                @if(@item.free==0)
+                                {
+                                   <a href="/admin/home/set?Id=@item.Id" class="alert alert-primary"> 5  | ست کردن شاخصه جدید</a>
+                                }
+                                else
+                                {
+                                   <a href="/admin/home/set?Id=@item.Id" class="alert alert-primary"> @item.free  | ست کردن شاخصه جدید</a>
+
+                                }
+                                
+                                
                                 </td>
                                 <td class="font-danger">
-                                    <a href="/admin/home/deatils/@item.Id" class="btn btn-warning">مشاهده سفارشات</a>
+                                    <a href="/admin/home/deatils/@item.Id" class="btn btn-warning form-control">مشاهده سفارشات</a>
                                 </td>
                                 
                                
-
-                              
-
-
                             </tr>
                                 i++;
                              }

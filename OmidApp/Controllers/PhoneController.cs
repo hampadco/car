@@ -38,7 +38,7 @@ public class PhoneController : Controller
 
     }
 
-    public IActionResult Check(string phone, string name, string password,string dev,string url,string Adress)
+    public IActionResult Check(string phone, string name, string password,string dev,string url,string Adress,string latitude,string longitude)
 {
     //check if user exist into _context
     var user = _context.Users.FirstOrDefault(u => u.Phone == phone);
@@ -62,7 +62,12 @@ public class PhoneController : Controller
                     Url = url,
                     Code = 0,
                     Cart = "0",
-                    Adress = Adress
+                    Adress = Adress,
+                    Latitude = latitude,
+                    Longitude = longitude,
+                    free = 5,
+                   
+                    
                 };
                 _context.Users.Add(us);
                 _context.SaveChanges();
@@ -76,6 +81,7 @@ public class PhoneController : Controller
                     DeviceId = dev,
                     UserId = quser.Id,
                     state = true,
+                    
                 };
                 _context.Devices.Add(device);
                 _context.SaveChanges();
@@ -97,6 +103,9 @@ public class PhoneController : Controller
         TempData["error"] = "شماره تلفن وارد شده قبلا ثبت شده است";
         return RedirectToAction("Login");
     }
+
+    
+
 }
 
 

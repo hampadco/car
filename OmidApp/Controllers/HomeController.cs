@@ -28,8 +28,22 @@ public class HomeController : Controller
     public async Task<IActionResult> home()
     {
       
-     
-      return View();
+         //get count request
+        var id=User.Identity.GetId();
+        var user=dbuser.ShowUser(Convert.ToInt32(id));
+        int result=user.use%user.free;
+        if (result==0)
+        {
+          ViewBag.Mondeh=0;
+         
+        }else
+        {
+          ViewBag.Mondeh=user.free-result;
+          
+        }
+       
+
+         return View();
     }
   
 
@@ -391,12 +405,12 @@ public IActionResult request()
             Id = request.Id,
             CarName = request.CarName,
             ParentServiceName = request.ParentServiceName,
-            Date = request.CreateDate,
+            Date = request.CreateDate.ToPersianDateString(),
             Status = request.Status
         };
         requestModels.Add(requestModel);
     }
-    return View(requestModels);
+    return View(requestModels.OrderByDescending(r => r.Id));
 }
 
 
@@ -428,6 +442,6 @@ public class SelectedServicesModel
 
         public string ParentServiceName { get; set; }
 
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         public string Status { get; set; }
     }

@@ -26,7 +26,15 @@
           <div class="cta-text p-2 p-lg-4">
               <div class="row p-lg-2">
               <div class="col-12">
-                  <h6 class="text-white m-3  text-center"> تعداد مانده تا اسید شویی رایگان : 5  </h6></div>
+              @if(@ViewBag.Mondeh == 0)
+              {
+                <h6 class="text-white m-3  text-center " style="line-height: 30px;" >تبریک می گوییم شما هم اکنون میتوانید از یک سرویس رایگان استفاده کنید</h6>
+              }else
+              {
+                                  <h6 class="text-white m-3  text-center"> تعداد مانده تا اسید شویی رایگان : @ViewBag.Mondeh  </h6>
+
+              }
+                </div>
                  
             </div>
                </div>
@@ -133,7 +141,7 @@
   }
 
   function call() {
-    window.location.href = "tel:09123456789";
+    window.location.href = "tel:09130495923";
   }
 
 

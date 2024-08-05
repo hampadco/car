@@ -12,9 +12,13 @@ public class Request
     public string ParentServiceName { get; set; }
     public string Description { get; set; }
 
+    public bool Mony { get; set; }
+
+
+
 
      public virtual User User { get; set; }
-    public virtual ICollection<Orders> Orders { get; set; }
+     public virtual ICollection<Orders> Orders { get; set; }
     
     
     

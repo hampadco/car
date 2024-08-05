@@ -26,7 +26,9 @@ public class SUser : IUser
      public bool EditUserProfile(VmUser user)
     {
       var q= db.Users.Where(x=>x.Phone==user.Phone).FirstOrDefault();
-         
+
+          q.Latitude=user.Latitude;
+          q.Longitude=user.Longitude;
           q.FirstAndLastName=user.FirstAndLastName;
           q.Phone=user.Phone;
           if ( user.Urlfirst != null)
@@ -49,7 +51,7 @@ public class SUser : IUser
       var q= db.Users.Where(a=>a.Id==id).FirstOrDefault();
       VmUser u = new VmUser()
       {
-         
+          Id=q.Id,
           Cart=q.Cart,
           Url=q.Url,
           FirstAndLastName=q.FirstAndLastName,
@@ -57,6 +59,10 @@ public class SUser : IUser
           Email=q.Email,
           Code=q.Code,
           Adress=q.Adress,
+          Latitude=q.Latitude,
+          Longitude=q.Longitude,
+            free=q.free,
+            use=q.use
          
       };
       
@@ -143,6 +149,10 @@ public class SUser : IUser
                 Email=item.Email,
                 Code=item.Code,
                 Adress=item.Adress,
+                Latitude=item.Latitude,
+                Longitude=item.Longitude,
+                free=item.free
+                
             };
             u.Add(v);
         }

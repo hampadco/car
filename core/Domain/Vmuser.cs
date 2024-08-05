@@ -11,5 +11,9 @@ public class VmUser
     public string Cart { get; set; }
     public int CorrectAnswer { get; set; }
     public string Adress { get; set; }
+    public string Latitude { get; set; }
+    public string Longitude { get; set; }
+    public int free { get; set; }
+    public int use { get; set; }
 
 }
