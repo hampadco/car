@@ -73,6 +73,7 @@
                 <th>شماره تلفن</th>
                 <th>تاریخ ثبت</th>
                 <th>وضعیت</th>
+                <th>نوع پرداختی</th>
                 <th>عملیات</th>
             </tr>
         </thead>
@@ -91,6 +92,20 @@
                     <td>@item.UserPhone</td>
                     <td>@item.Date</td>
                     <td>@item.Status</td>
+                    <td>
+                    @if(item.Status == "پیش فاکتور")
+                    {
+                        <a class="btn btn-warning">نامشخص  </a>
+                        }else if(item.Mony == false)
+                        {
+                           <a class="btn btn-primary">غیر رایگان</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-success">رایگان</a>
+                        }
+                    
+                    </td>
                     <td>
                         <a href="/admin/home/RequestDetails?id=@item.Id" class="btn btn-primary">مشاهده</a>
                         <a href="/admin/home/DeleteRequest?id=@item.Id" class="btn btn-danger" onclick="return confirm('ایا از حذف مطمئن هستید')">حذف</a>

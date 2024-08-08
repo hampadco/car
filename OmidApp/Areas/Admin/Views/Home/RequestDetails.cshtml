@@ -64,11 +64,8 @@
               </div>
 
 
-            @if(Model.Request.Status == "پیش فاکتور")
-            {
-                <button type="button" class="btn btn-warning" > در انتظار ارسال از سمت تعمیرگاه </button>
-            }
-            else if(Model.Request.Status == "در انتظار تایید")
+           
+             @if(Model.Request.Status == "در انتظار تایید")
             {
                  <a type="button" class="btn btn-success" href="/admin/home/AcceptRequest?id=@Model.Request.Id" >تایید</a>
                 <br>

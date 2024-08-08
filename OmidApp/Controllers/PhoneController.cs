@@ -144,12 +144,12 @@ public class PhoneController : Controller
             _context.Devices.Add(device);
             _context.SaveChanges();
         }
-        else if (qdevice.DeviceId != dev2)
-        {
-            //tempdata
-            TempData["error"] = "این شماره تلفن در دستگاه دیگری استفاده می شود";
-            return RedirectToAction("login");
-        }
+        // else if (qdevice.DeviceId != dev2)
+        // {
+        //     //tempdata
+        //     TempData["error"] = "این شماره تلفن در دستگاه دیگری استفاده می شود";
+        //     return RedirectToAction("login");
+        // }
         
 
             /////////////////////////////////////////

@@ -13,6 +13,7 @@ public class Context:DbContext
     public DbSet<Service> Services { get; set; }
     public DbSet<Request> Requests { get; set; }
     public DbSet<Orders> Orders { get; set; }
+    public DbSet<Admin> Admins { get; set; }
        
     
     // protected override void OnConfiguring(DbContextOptionsBuilder db)

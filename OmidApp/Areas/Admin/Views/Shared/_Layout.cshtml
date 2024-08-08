@@ -137,8 +137,8 @@
                                         class="main-circle"></span></div>
                             </div>
                             <ul class="profile-dropdown onhover-show-div p-20 profile-dropdown-hover">
-                                @* <li><a href="#"><i data-feather="user"></i>ویرایش نمایه</a></li>
-                                <li><a href="#"><i data-feather="mail"></i>صندوق ورودی</a></li>
+                                <li><a href="/admin/home/profile"><i data-feather="user"></i>ویرایش نمایه</a></li>
+                                @*<li><a href="#"><i data-feather="mail"></i>صندوق ورودی</a></li>
                                 <li><a href="#"><i data-feather="lock"></i>قفل صفحه</a></li>
                                 <li><a href="#"><i data-feather="settings"></i>تنظیمات</a></li> *@
                                 <li><a href="/admin/home/exit"><i data-feather="log-out"></i>خروج</a></li>
@@ -175,26 +175,34 @@
                         <li><a class="sidebar-header" href="/admin/home/index"><i
                                     data-feather="home"></i><span> لیست تعمیرگاه ها</span></a></li>
 
-
+                                  @if ( User.FindFirst("Role").Value == "admin")
+                                  {
                                      <li><a class="sidebar-header" href="/admin/home/category"><i
                                     data-feather="home"></i><span>دسته بندی  </span></a></li>
+                                   }
 
 
-
-
-                        <li><a class="sidebar-header" href="/admin/services/index"><i
+                        @if ( User.FindFirst("Role").Value == "admin")
+                                  {
+                                   <li><a class="sidebar-header" href="/admin/services/index"><i
                                     data-feather="user-plus"></i><span> سرویس ها  </span></a>
-
-                        </li>
+                                  
+                                 </li>
+                                  }
                         <li><a class="sidebar-header" href="/admin/home/request"><i
                                     data-feather="user-plus"></i><span> درخواست ها  </span></a>
-                        
-                        <li><a class="sidebar-header" href="/admin/home/agent"><i
+                          @if ( User.FindFirst("Role").Value == "admin")
+                                  {
+                        <li><a class="sidebar-header" href="/admin/home/listadmin"><i
                                     data-feather="chrome"></i><span> تعریف مدیران </span></a>
 
                         </li>
+                        }
+                         @if ( User.FindFirst("Role").Value == "admin")
+                                  {
                         <li><a class="sidebar-header" href="/admin/home/paystatus"><i
                                     data-feather="bar-chart"></i><span>وضعیت تراکنش ها </span></a></li>
+                                    }
                         @* <li><a class="sidebar-header" href="/admin/home/setting"><i
                                     data-feather="settings"></i><span>تنظیمات</span></a>
 

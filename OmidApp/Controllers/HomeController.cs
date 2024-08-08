@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Security.Claims;
 using Infrastrcture.Migrations;
+using Kavenegar;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,17 +31,53 @@ public class HomeController : Controller
       
          //get count request
         var id=User.Identity.GetId();
+
+        //check id is null return to login
+        if (id == null)
+        {
+            return RedirectToAction("login","phone");
+        }
+
+
         var user=dbuser.ShowUser(Convert.ToInt32(id));
+
+       
         int result=user.use%user.free;
-        if (result==0)
+        if(user.use==0)
+        {
+           ViewBag.Mondeh=user.free;
+        }
+        else if (result==0 && user.use!=0)
         {
           ViewBag.Mondeh=0;
          
         }else
         {
-          ViewBag.Mondeh=user.free-result;
+            if(user.use>user.free)
+            {
+                ViewBag.Mondeh=user.free-result+1;
+            }else
+            {
+                ViewBag.Mondeh=user.free-result;
+            }
+         
           
         }
+
+        //context request table 
+       int sum=0;
+       var requests=db.Requests.Where(x=>x.Mony ==true).ToList();
+         foreach (var item in requests)
+            {
+            var orders=db.Orders.Where(x=>x.IdRequest==item.Id).ToList();
+            foreach (var order in orders)
+            {
+                sum+=order.Price;
+            }
+            }
+            ViewBag.Sum=sum;
+
+       
        
 
          return View();
@@ -382,6 +419,19 @@ public IActionResult SaveAdditionalDescription(int requestId, string description
         return NotFound(new { success = false, message = "Request not found" });
     }
 
+    //sms 
+    // try
+    // {
+    //       KavenegarApi SmsApi = new KavenegarApi("74774D6F6A6D346D2F5279755241674E49735750424655794E6952636F503735");
+    //       SmsApi.VerifyLookup("09149501938", "/admin/home/newrequest?id="+requestId.ToString(), "demo");
+    // }
+    // catch (System.Exception)
+    // {
+        
+       
+    // }
+   
+       
     request.Description = description;
     request.Status = "در انتظار تایید";
     db.SaveChanges();

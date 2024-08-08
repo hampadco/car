@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OmidApp.Models;
 using Extensions;
+using Infrastrcture.Migrations;
 
 [Area("Admin")]
 public class HomeController : Controller
@@ -42,6 +43,29 @@ public class HomeController : Controller
         return View();
          
     }
+    public IActionResult profile()
+    {
+        //get id  to identity
+        var id=User.Identity.GetId();
+
+        //get user by id context
+        var user=_context.Admins.Find(int.Parse(id));
+        ViewBag.User=user;
+        return View();
+         
+    }
+    public IActionResult setpassword(int id,string password)
+    {
+        //get user by id context
+        var user=_context.Admins.Find(id);
+        // user.pa=free;
+        user.Password=password;
+       
+        _context.Admins.Update(user);
+        _context.SaveChanges();
+        return RedirectToAction("index");
+         
+    }
 
     public IActionResult setnew(int id,int free)
     {
@@ -58,27 +82,37 @@ public class HomeController : Controller
     {
         return View();
     }
-     public IActionResult log(int Password, string email)
+     public async Task<IActionResult> logAsync(string Password, string email)
     {
-        if (Password == 1234 && email == "admin")
+        //check if admins is null add default admin and password
+        if (_context.Admins.Count()==0)
         {
-               var claims = new List<Claim>() 
-               {
-               new Claim (ClaimTypes.NameIdentifier,"admin"),
-               new Claim (ClaimTypes.Name, "admin")
-               };
+            _context.Admins.Add(new Admin{UserName="admin",Password="admin",Role="admin",Status="فعال",PhoneNumber="09130495923",NameFamily="آقای حمزه ای نژاد"});
+            _context.SaveChanges();
+        }
+        
 
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var user=_context.Admins.Where(x=>x.UserName==email && x.Password==Password && x.Status=="فعال").FirstOrDefault();
+        if (user != null)
+        {
+               ClaimsIdentity identity = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    //add new claim for add value quser.cart if null set 0
+                    new Claim("Role", user.Role),
+                    
+                }, CookieAuthenticationDefaults.AuthenticationScheme);
 
                 var principal = new ClaimsPrincipal(identity);
-
                 var properties = new AuthenticationProperties
                 {
-                    ExpiresUtc = DateTime.UtcNow.AddYears(1),
+                    ExpiresUtc = DateTime.UtcNow.AddYears(100), // Set the ExpiresUtc to a far-future date
                     IsPersistent = true
                 };
-                HttpContext.SignInAsync(principal, properties);
+                await HttpContext.SignInAsync(principal, properties);
                 return RedirectToAction("index");
+              
         }
         else
         {
@@ -520,7 +554,9 @@ public IActionResult SavePrices(List<int> ServiceIds, List<int> Prices)
             UserPhone = user.Phone,
             tamirgah = user.Url,
             Date = request.CreateDate.ToPersianDateString(),
-            Status = request.Status
+            Status = request.Status,
+            Mony = request.Mony
+            
         };
         requestModels.Add(requestModel);
     }
@@ -574,6 +610,15 @@ public IActionResult AcceptRequest(int id)
         return NotFound();
     }
 
+       
+        var userme=_context.Users.Find(request.UserId);
+        //if user use > user free 
+        
+        if (userme.use != 0 && userme.free != 0 && userme.use % (userme.free+1) == 0)
+        {
+            request.Mony = true;
+        }
+
     request.Status = "تایید شده";
     _context.SaveChanges();
 
@@ -593,14 +638,13 @@ public IActionResult AcceptRequest2(int id)
     {
         return NotFound();
     }
-
+       
     request.Status = "اتمام و ارسال شده ";
     _context.SaveChanges();
      //get user by id and mineze free
     var user = _context.Users.Find(request.UserId);
    
-    user.use += 1;
-    _context.SaveChanges();
+  
 
     return RedirectToAction("Request");
 }
@@ -644,6 +688,10 @@ public IActionResult DeleteRequest(int id)
 public IActionResult DeleteRequestt(int id)
 {
     var request = _context.Requests.Find(id);
+      var user = _context.Users.Find(request.UserId);
+    
+      user.use -= 1;
+    
     if (request == null)
     {
         return NotFound();
@@ -655,6 +703,8 @@ public IActionResult DeleteRequestt(int id)
     var orders = _context.Orders.Where(o => o.IdRequest == id).ToList();
     _context.Orders.RemoveRange(orders);
     _context.SaveChanges();
+
+   
 
     return RedirectToAction("deatils",new{id=request.UserId});
 
@@ -672,6 +722,9 @@ public class RequestModel
     public string UserPhone { get; set; }
     public string Date { get; set; }
     public string Status { get; set; }
+
+    //Mony
+    public bool Mony { get; set; }
 }
 
 public class RequestListViewModel
@@ -728,6 +781,109 @@ public class RequestListViewModel
 
     return View(viewModel);
 }
+
+public IActionResult Listadmin()
+{
+    ViewBag.User=_context.Admins.OrderByDescending(x=>x.Id).ToList();
+    return View();
+}
+
+public IActionResult Active(int Id)
+{
+
+    //get user by id context
+    var user=_context.Admins.Find(Id);
+    if (user.Status=="فعال")
+    {
+        user.Status="غیر فعال";
+    }else
+    {
+        user.Status="فعال";
+    }
+    _context.Admins.Update(user);
+    _context.SaveChanges();
+
+    // TODO: Your code here
+   return RedirectToAction("Listadmin");
+}
+
+//delete admin
+public IActionResult Deleteadmin(int Id)
+{
+     var user=_context.Admins.Find(Id);
+    //if name sdmin not delet
+    if (user.UserName=="admin")
+    {
+        
+        return RedirectToAction("Listadmin");
+    }
+    //get user by id context
+   
+    _context.Admins.Remove(user);
+    _context.SaveChanges();
+
+    return RedirectToAction("Listadmin");
+}
+
+public IActionResult addadmin()
+{
+    // TODO: Your code here
+    return View();
+}
+
+[HttpPost]
+public IActionResult addadmin(Admin admin)
+{
+    //if exist username 
+    var q=_context.Admins.Where(x=>x.UserName==admin.UserName).FirstOrDefault();
+    if (q==null)
+    {
+        //status
+        admin.Status="فعال";
+        //role
+        admin.Role="agent";
+        _context.Admins.Add(admin);
+        _context.SaveChanges();
+    }else
+    {
+        TempData["msg"]="نام کاربری قبلا ثبت شده است";
+        return View();
+    }
+    return RedirectToAction("Listadmin");
+}
+
+
+public IActionResult editadmin(int id)
+{
+    //get user by id context
+    var user=_context.Admins.Find(id);
+
+    // TODO: Your code here
+    return View(user);
+}
+
+[HttpPost]
+public IActionResult editadmin(Admin admin)
+{
+    //update user just change iteams
+    var user=_context.Admins.Find(admin.Id);
+
+    user.NameFamily=admin.NameFamily;
+    user.PhoneNumber=admin.PhoneNumber;
+    user.Password=admin.Password;
+
+    //update
+    _context.Admins.Update(user);
+    _context.SaveChanges();
+
+
+    
+
+
+    
+    return RedirectToAction("Listadmin");
+}
+
 
 
 }
